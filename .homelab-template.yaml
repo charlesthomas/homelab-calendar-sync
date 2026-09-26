@@ -1,0 +1,19 @@
+_commit: v1.12.1-10-g6796849
+_src_path: /Users/crthomas/code/charlesthomas/homelab-template
+additionalResources: ''
+backups: false
+helm: false
+homepageEnabled: false
+ingress: false
+labels: 'app: calendar-sync'
+name: calendar-sync
+namespace: calendar-sync
+pvc: false
+reloader: true
+resources:
+- cronjobs.yaml
+- external-secrets.yaml
+service: false
+serviceAccount: false
+upstreamURL: https://github.com/magicdude4eva/calendar-sync
+url: https://github.com/charlesthomas/homelab-calendar-sync

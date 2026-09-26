@@ -1,0 +1,21 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: calendar-sync
+
+commonAnnotations:
+  repo: https://github.com/charlesthomas/homelab-calendar-sync
+commonLabels:
+  app: calendar-sync
+
+resources:
+- resources/cronjobs.yaml
+- resources/external-secrets.yaml
+- resources/namespaces.yaml
+
+images:
+- name: calendar-sync
+  newName: ghcr.io/charlesthomas/calendar-sync
+  newTag: v1.4.3
+
+patches:
