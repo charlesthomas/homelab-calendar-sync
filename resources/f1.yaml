@@ -1,0 +1,68 @@
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: calendar-sync-f1
+  namespace: calendar-sync
+spec:
+  target:
+    name: calendar-sync-f1
+    deletionPolicy: Delete
+  data:
+    - secretKey: config.json
+      remoteRef:
+        conversionStrategy: Default
+        decodingStrategy: None
+        key: cal-sync-f1
+        metadataPolicy: None
+      sourceRef:
+        storeRef:
+          name: bitwarden-notes
+          kind: ClusterSecretStore
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: calendar-sync-f1
+  namespace: calendar-sync
+spec:
+  schedule: "@daily"
+  timeZone: America/Detroit
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        spec:
+          restartPolicy: Never
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: calendar-sync
+              image: calendar-sync
+              args:
+                - --import
+              env:
+                - name: PYTHONUNBUFFERED
+                  value: "1"
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop:
+                    - ALL
+              volumeMounts:
+                - name: config
+                  mountPath: /app/config.json
+                  subPath: config.json
+                  readOnly: true
+          volumes:
+            - name: config
+              secret:
+                secretName: calendar-sync-f1

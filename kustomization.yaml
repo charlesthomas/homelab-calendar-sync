@@ -9,9 +9,11 @@ commonLabels:
   app: calendar-sync
 
 resources:
-- resources/cronjobs.yaml
-- resources/external-secrets.yaml
+- resources/f1.yaml
 - resources/namespaces.yaml
+- resources/pager-duty.yaml
+- resources/wimbledon.yaml
+- resources/wrexham.yaml
 
 images:
 - name: calendar-sync
