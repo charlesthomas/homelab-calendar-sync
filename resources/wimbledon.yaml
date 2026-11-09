@@ -47,6 +47,7 @@ spec:
             - name: calendar-sync
               image: calendar-sync
               args:
+                - --cleanup
                 - --import
               env:
                 - name: PYTHONUNBUFFERED
